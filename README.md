@@ -1,9 +1,3 @@
----
-title: Setting Up a Next.js Frontend Application with pnpm
----
-
-import { Code } from 'nextra/components';
-
 # Setting Up a Next.js Frontend Application with pnpm
 
 This guide will walk you through the steps to install pnpm and run the server in your existing Next.js repository.
