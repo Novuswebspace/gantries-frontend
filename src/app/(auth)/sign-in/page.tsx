@@ -1,5 +1,7 @@
-import React from 'react';
-import Image from 'next/image';
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Input } from "@/components/ui/input";
 
 const SignInPage = () => {
   return (
@@ -16,7 +18,9 @@ const SignInPage = () => {
         <div className="absolute inset-0 flex flex-col justify-center p-16 text-white">
           <h1 className="text-5xl font-bold mb-6">Our Aim</h1>
           <p className="text-xl">
-            Empowering Tomorrow's Leaders: Join a Thriving Community of Student Entrepreneurs to Innovate, Collaborate, and Achieve Success Together!
+            Empowering Tomorrow's Leaders: Join a Thriving Community of Student
+            Entrepreneurs to Innovate, Collaborate, and Achieve Success
+            Together!
           </p>
         </div>
       </div>
@@ -44,7 +48,7 @@ const SignInPage = () => {
             </div>
 
             <div className="mb-6">
-              <input
+              <Input
                 type="text"
                 placeholder="User name or email address"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-700"
@@ -64,9 +68,9 @@ const SignInPage = () => {
                 <input type="checkbox" className="mr-2" />
                 Remember me
               </label>
-              <a href="#" className="text-gray-700 font-medium">
+              <Link href="#" className="text-gray-700 font-medium">
                 Forgot your password?
-              </a>
+              </Link>
             </div>
 
             <button
@@ -78,10 +82,10 @@ const SignInPage = () => {
           </form>
 
           <p className="mt-8 text-center text-gray-600">
-            Don't have an account?{' '}
-            <a href="/sign-up" className="text-gray-700 font-medium">
+            Don't have an account?{" "}
+            <Link href="/sign-up" className="text-gray-700 font-medium">
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
       </div>
