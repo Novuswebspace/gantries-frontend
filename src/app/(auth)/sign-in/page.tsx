@@ -1,89 +1,114 @@
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Input } from "@/components/ui/input";
+"use client";
 
-const SignInPage = () => {
+import Link from "next/link";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useAxios } from "@/hooks/use-axios";
+import Spinner from "@/components/globals/spinner";
+
+const SignInSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z.string().min(1, { message: "Password is required" }),
+});
+
+type SignInSchema = z.infer<typeof SignInSchema>;
+
+export default function SignInPage() {
+  const form = useForm<SignInSchema>({
+    resolver: zodResolver(SignInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const { loading, mutate } = useAxios();
+
+  const onSubmit = async (values: SignInSchema) => {
+    const { data, error } = await mutate("post", "/auth/login", values);
+    if (error) {
+      toast.error(error);
+    } else if (data) {
+      console.log(data);
+      toast.success("Successfully signed in!");
+    }
+  };
+
   return (
-    <div className="flex h-screen">
-      {/* Left side - Background Image and Text */}
-      <div className="w-1/2 relative">
+    <div className="h-screen flex bg-purple-50">
+      <div className="hidden md:block w-1/2 relative">
         <Image
           src="/images/nature.jpg"
           alt="Background"
           layout="fill"
           objectFit="cover"
-          className=""
         />
-        <div className="absolute inset-0 flex flex-col justify-center p-16 text-white">
-          <h1 className="text-5xl font-bold mb-6">Our Aim</h1>
-          <p className="text-xl">
-            Empowering Tomorrow's Leaders: Join a Thriving Community of Student
-            Entrepreneurs to Innovate, Collaborate, and Achieve Success
-            Together!
+        <div className="absolute inset-0 bg-[#5f3a9e] bg-opacity-10 flex flex-col justify-center items-center p-12 text-white">
+          <h1 className="text-4xl font-bold mb-6">Welcome Back</h1>
+          <p className="text-xl text-center mb-8">
+            Sign in to continue your journey with Gantries by eSamudaay.
           </p>
         </div>
       </div>
-
-      {/* Right side - Sign In Form */}
-      <div className="w-1/2 bg-white flex items-center justify-center">
-        <div className="w-96">
-          <h2 className="text-3xl font-semibold mb-8">Sign in</h2>
-          <form>
-            <button className="w-full py-3 px-4 border border-gray-300 rounded-lg mb-6 flex items-center justify-center text-gray-700 font-medium">
-              <Image
-                src="/images/google-icon.webp"
-                alt="Google"
-                width={20}
-                height={20}
-                className="mr-2"
+      <div className="w-full md:w-1/2 overflow-y-auto flex items-center justify-center p-8">
+        <div className="max-w-md w-full">
+          <h2 className="text-3xl font-semibold text-center text-[#4b2f79] mb-6">
+            Sign In to Your Account
+          </h2>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[#5f3a9e]">Email Address</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="john@example.com" {...field} className="border-[#5f3a9e] focus:border-[#4b2f79]" />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
               />
-              Continue with Google
-            </button>
-
-            <div className="flex items-center mb-6">
-              <div className="flex-grow border-t border-gray-300"></div>
-              <span className="px-4 text-gray-500">OR</span>
-              <div className="flex-grow border-t border-gray-300"></div>
-            </div>
-
-            <div className="mb-6">
-              <Input
-                type="text"
-                placeholder="User name or email address"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-700"
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[#5f3a9e]">Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} className="border-[#5f3a9e] focus:border-[#4b2f79]" />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
               />
-            </div>
-
-            <div className="mb-6">
-              <input
-                type="password"
-                placeholder="Your password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-700"
-              />
-            </div>
-
-            <div className="flex justify-between items-center mb-6">
-              <label className="flex items-center text-gray-700">
-                <input type="checkbox" className="mr-2" />
-                Remember me
-              </label>
-              <Link href="#" className="text-gray-700 font-medium">
-                Forgot your password?
-              </Link>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-gray-700 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition duration-300"
-            >
-              Sign in
-            </button>
-          </form>
-
-          <p className="mt-8 text-center text-gray-600">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#5f3a9e] text-white hover:bg-[#4b2f79] transition duration-300"
+              >
+                {loading ? <Spinner /> : "Sign In"}
+              </Button>
+            </form>
+          </Form>
+          <p className="mt-6 text-center text-[#5f3a9e]">
             Don't have an account?{" "}
-            <Link href="/sign-up" className="text-gray-700 font-medium">
+            <Link href="/sign-up" className="text-[#4b2f79] hover:underline">
               Sign up
             </Link>
           </p>
@@ -91,6 +116,4 @@ const SignInPage = () => {
       </div>
     </div>
   );
-};
-
-export default SignInPage;
+}
