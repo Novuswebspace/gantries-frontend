@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAxios } from "@/hooks/use-axios";
 import Spinner from "@/components/globals/spinner";
+import { User } from "@/types";
 
 const SignInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -39,7 +40,7 @@ export default function SignInPage() {
   const { loading, mutate } = useAxios();
 
   const onSubmit = async (values: SignInSchema) => {
-    const { data, error } = await mutate("post", "/auth/login", values);
+    const { data, error } = await mutate<User>("post", "/auth/login", values);
     if (error) {
       toast.error(error);
     } else if (data) {
