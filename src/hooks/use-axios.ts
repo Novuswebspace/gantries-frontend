@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { AxiosError, AxiosRequestConfig } from "axios";
+import { ApiResponse } from "@/types";
 import axios from "@/lib/axios";
-
 
 export const useAxios = () => {
   const [loading, setLoading] = useState(false);
@@ -10,11 +10,11 @@ export const useAxios = () => {
    * @param endpoint string
    */
   const fetch = useCallback(async <T>(endpoint: string) => {
-    let data: T | null = null;
+    let data: ApiResponse<T> | null = null;
     let error: string = "";
     try {
       setLoading(true);
-      const res = await axios.get<T>(endpoint);
+      const res = await axios.get<ApiResponse<T>>(endpoint);
       data = res.data;
     } catch (err: any) {
       console.log(err);
@@ -28,6 +28,12 @@ export const useAxios = () => {
     return { data, error };
   }, []);
 
+  /**
+   * @param method  Type of request --> "put" | "post" | "delete"
+   * @param body Request body
+   * @param config Axios Config
+   * @param T Type of data expected Ex:mutate<"Data type expected from the response">(...)
+   */
   const mutate = useCallback(
     async <T>(
       method: "put" | "post" | "delete",
@@ -35,11 +41,11 @@ export const useAxios = () => {
       body?: any,
       config?: AxiosRequestConfig
     ) => {
-      let data: T | null = null;
+      let data: ApiResponse<T> | null = null;
       let error: string = "";
       try {
         setLoading(true);
-        const res = await axios[method]<T>(endpoint, body, config);
+        const res = await axios[method]<ApiResponse<T>>(endpoint, body, config);
         data = res.data;
         console.log("data", data);
       } catch (err: any) {

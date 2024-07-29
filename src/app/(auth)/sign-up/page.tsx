@@ -19,12 +19,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAxios } from "@/hooks/use-axios";
 import Spinner from "@/components/globals/spinner";
+import { User } from "@/types";
+import { useRouter } from "next/navigation";
 
 const SignUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string().length(10, { message: "Invalid Phone Number" }),
   firstname: z.string().min(2, { message: "First name is required" }),
   lastname: z.string().min(2, { message: "Last name is required" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
 });
 
 type SignUpSchema = z.infer<typeof SignUpSchema>;
@@ -37,17 +42,24 @@ export default function SignUpPage() {
       firstname: "",
       lastname: "",
       password: "",
+      phone: "",
     },
   });
 
+  const router = useRouter();
   const { loading, mutate } = useAxios();
 
   const onSubmit = async (values: SignUpSchema) => {
-    const { data, error } = await mutate("post", "/auth/register", values);
+    const { data, error } = await mutate<User>(
+      "post",
+      "/auth/register",
+      values
+    );
     if (error) {
       toast.error(error);
     } else if (data) {
       console.log(data);
+      router.replace("/verify");
       toast.success("Account created successfully!");
     }
   };
@@ -68,8 +80,8 @@ export default function SignUpPage() {
           </p>
         </div>
       </div>
-      <div className="w-full md:w-1/2 overflow-y-auto flex items-center justify-center p-8">
-        <div className="max-w-md w-full">
+      <div className="w-full md:w-1/2 overflow-y-scroll grid place-items-center">
+        <div className="w-full max-w-md py-4">
           <h2 className="text-3xl font-semibold text-center text-[#4b2f79] mb-6">
             Create Your Account
           </h2>
@@ -82,7 +94,11 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel className="text-[#5f3a9e]">First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John" {...field} className="border-[#5f3a9e] focus:border-[#4b2f79]" />
+                      <Input
+                        placeholder="John"
+                        {...field}
+                        className="border-[#5f3a9e] focus:border-[#4b2f79]"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -95,7 +111,11 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel className="text-[#5f3a9e]">Last Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Doe" {...field} className="border-[#5f3a9e] focus:border-[#4b2f79]" />
+                      <Input
+                        placeholder="Doe"
+                        {...field}
+                        className="border-[#5f3a9e] focus:border-[#4b2f79]"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -106,9 +126,36 @@ export default function SignUpPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-[#5f3a9e]">Email Address</FormLabel>
+                    <FormLabel className="text-[#5f3a9e]">
+                      Email Address
+                    </FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="john@example.com" {...field} className="border-[#5f3a9e] focus:border-[#4b2f79]" />
+                      <Input
+                        type="email"
+                        placeholder="john@example.com"
+                        {...field}
+                        className="border-[#5f3a9e] focus:border-[#4b2f79]"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[#5f3a9e]">
+                      Phone Number
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="1234567890"
+                        {...field}
+                        className="border-[#5f3a9e] focus:border-[#4b2f79]"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -121,7 +168,12 @@ export default function SignUpPage() {
                   <FormItem>
                     <FormLabel className="text-[#5f3a9e]">Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} className="border-[#5f3a9e] focus:border-[#4b2f79]" />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        {...field}
+                        className="border-[#5f3a9e] focus:border-[#4b2f79]"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
