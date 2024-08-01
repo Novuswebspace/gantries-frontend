@@ -1,11 +1,15 @@
 //types
 
+export type ApiResponse<T> = {
+  data: T | any;
+  message: string;
+};
+
 export type User = {
   firstname: string;
   lastname: string;
   email: string;
-  password: string;
-  verifyToken: string;
+  phone: string;
   isOAuthUser: boolean;
   isVerified: boolean;
   createdAt: Date;
