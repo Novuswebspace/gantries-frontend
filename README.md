@@ -74,7 +74,7 @@ A commit message consists of two parts:
 
 You have successfully set up and run your Next.js application using pnpm and learned how to write clear and consistent Git commit messages using specific keywords. This setup and these guidelines provide a robust foundation for building modern web applications with a streamlined workflow.
 
-For more information, refer to the official documentation of [Next.js](https://nextjs.org/docs) and [pnpm](https://pnpm.io).
+<!-- For more information, refer to the official documentation of [Next.js](https://nextjs.org/docs) and [pnpm](https://pnpm.io). -->
 
 
 

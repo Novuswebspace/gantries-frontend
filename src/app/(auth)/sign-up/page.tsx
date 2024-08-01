@@ -95,7 +95,7 @@ export default function SignUpPage() {
                     <FormLabel className="text-[#5f3a9e]">First Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="John"
+                        placeholder="Aditya"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
@@ -112,7 +112,7 @@ export default function SignUpPage() {
                     <FormLabel className="text-[#5f3a9e]">Last Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Doe"
+                        placeholder="Shekhar"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
@@ -132,7 +132,7 @@ export default function SignUpPage() {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="john@example.com"
+                        placeholder="aditya@example.com"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
