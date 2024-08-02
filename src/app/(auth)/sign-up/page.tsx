@@ -21,6 +21,9 @@ import { useAxios } from "@/hooks/use-axios";
 import Spinner from "@/components/globals/spinner";
 import { User } from "@/types";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/store";
+import { authenticate } from "@/store/features/auth-slice";
+import { ROUTES } from "@/routes";
 
 const SignUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -47,6 +50,7 @@ export default function SignUpPage() {
   });
 
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { loading, mutate } = useAxios();
 
   const onSubmit = async (values: SignUpSchema) => {
@@ -58,8 +62,8 @@ export default function SignUpPage() {
     if (error) {
       toast.error(error);
     } else if (data) {
-      console.log(data);
-      router.replace("/verify");
+      dispatch(authenticate(data.data));
+      router.replace(ROUTES.VERIFY);
       toast.success("Account created successfully!");
     }
   };
@@ -73,7 +77,7 @@ export default function SignUpPage() {
           layout="fill"
           objectFit="cover"
         />
-        <div className="absolute inset-0 bg-[#5f3a9e] bg-opacity-10 flex flex-col justify-center items-center p-12 text-white">
+        <div className="absolute inset-0 bg-[#5f3a9e] bg-opacity-10 flex flex-col justify-center items-center p-12 text-white tracking-in-expand">
           <h1 className="text-4xl font-bold mb-6">Gantries by eSamudaay</h1>
           <p className="text-xl text-center mb-8">
             Join our community of young entrepreneurs building great businesses.
@@ -95,7 +99,6 @@ export default function SignUpPage() {
                     <FormLabel className="text-[#5f3a9e]">First Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="John"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
@@ -112,7 +115,6 @@ export default function SignUpPage() {
                     <FormLabel className="text-[#5f3a9e]">Last Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Doe"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
@@ -132,7 +134,6 @@ export default function SignUpPage() {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="john@example.com"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
@@ -152,7 +153,6 @@ export default function SignUpPage() {
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="1234567890"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
@@ -170,7 +170,6 @@ export default function SignUpPage() {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="••••••••"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
@@ -190,7 +189,10 @@ export default function SignUpPage() {
           </Form>
           <p className="mt-6 text-center text-[#5f3a9e]">
             Already have an account?{" "}
-            <Link href="/sign-in" className="text-[#4b2f79] hover:underline">
+            <Link
+              href={ROUTES.SIGNIN}
+              className="text-[#4b2f79] hover:underline"
+            >
               Sign in
             </Link>
           </p>

@@ -20,9 +20,13 @@ import { Input } from "@/components/ui/input";
 import { useAxios } from "@/hooks/use-axios";
 import Spinner from "@/components/globals/spinner";
 import { User } from "@/types";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/store";
+import { authenticate } from "@/store/features/auth-slice";
+import { ROUTES } from "@/routes";
 
 const SignInSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string().length(10, "Invalid Phone Number"),
   password: z.string().min(1, { message: "Password is required" }),
 });
 
@@ -32,20 +36,26 @@ export default function SignInPage() {
   const form = useForm<SignInSchema>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
-      email: "",
+      phone: "",
       password: "",
     },
   });
 
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const { loading, mutate } = useAxios();
 
   const onSubmit = async (values: SignInSchema) => {
     const { data, error } = await mutate<User>("post", "/auth/login", values);
     if (error) {
       toast.error(error);
+      if (error.includes("not verified")) {
+        return router.replace("/verify");
+      }
     } else if (data) {
-      console.log(data);
-      toast.success("Successfully signed in!");
+      dispatch(authenticate(data.data));
+      toast.success(data.message);
+      router.replace("/");
     }
   };
 
@@ -58,7 +68,7 @@ export default function SignInPage() {
           layout="fill"
           objectFit="cover"
         />
-        <div className="absolute inset-0 bg-[#5f3a9e] bg-opacity-10 flex flex-col justify-center items-center p-12 text-white">
+        <div className="absolute inset-0 bg-[#5f3a9e] bg-opacity-10 flex flex-col justify-center items-center p-12 text-white tracking-in-expand">
           <h1 className="text-4xl font-bold mb-6">Welcome Back</h1>
           <p className="text-xl text-center mb-8">
             Sign in to continue your journey with Gantries by eSamudaay.
@@ -74,12 +84,18 @@ export default function SignInPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="email"
+                name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-[#5f3a9e]">Email Address</FormLabel>
+                    <FormLabel className="text-[#5f3a9e]">
+                      Phone Number
+                    </FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="john@example.com" {...field} className="border-[#5f3a9e] focus:border-[#4b2f79]" />
+                      <Input
+                        type="number"
+                        {...field}
+                        className="border-[#5f3a9e] focus:border-[#4b2f79]"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -92,7 +108,11 @@ export default function SignInPage() {
                   <FormItem>
                     <FormLabel className="text-[#5f3a9e]">Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} className="border-[#5f3a9e] focus:border-[#4b2f79]" />
+                      <Input
+                        type="password"
+                        {...field}
+                        className="border-[#5f3a9e] focus:border-[#4b2f79]"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -109,7 +129,7 @@ export default function SignInPage() {
           </Form>
           <p className="mt-6 text-center text-[#5f3a9e]">
             Don't have an account?{" "}
-            <Link href="/sign-up" className="text-[#4b2f79] hover:underline">
+            <Link href={ROUTES.SIGNUP} className="text-[#4b2f79] hover:underline">
               Sign up
             </Link>
           </p>

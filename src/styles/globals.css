@@ -82,3 +82,22 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+.tracking-in-expand {
+  animation: tracking-in-expand 1.2s cubic-bezier(.215, .61, .355, 1.000) both
+}
+
+@keyframes tracking-in-expand {
+  0% {
+    letter-spacing: -.5em;
+    opacity: 0
+  }
+
+  40% {
+    opacity: .6
+  }
+
+  100% {
+    opacity: 1
+  }
+}
