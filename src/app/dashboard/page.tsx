@@ -8,11 +8,19 @@ import {
   CardHeader,
   CardContent,
   CardFooter,
+  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 // import { Navbar, Text } from "@nextui-org/react";
 
 export default function dashboard() {
+  const communities = [
+    { name: "Test", avatar: "path/to/avatar1.png" },
+    { name: "MarufCircus", avatar: "path/to/avatar2.png" },
+    { name: "Clowns", avatar: "path/to/avatar3.png" },
+    { name: "Fedora", avatar: "path/to/avatar4.png" },
+    { name: "Hahahaah", avatar: "path/to/avatar5.png" },
+  ];
   return (
     <main className="min-h-screen flex flex-col bg-purple-50">
       <header className="p-4 bg-white shadow-sm">
@@ -151,6 +159,144 @@ export default function dashboard() {
           </Button>
         </CardFooter>
       </Card>
+      <div className="min-h-screen bg-gray-100 p-4 flex justify-center">
+        <div className="w-full max-w-md">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-white bg-purple-600 p-2 rounded-t-md">
+                Top Communities
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="bg-white p-4">
+              {communities.map((community, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center my-2"
+                >
+                  <div className="flex items-center">
+                    <Avatar className="mr-2">
+                      <AvatarImage
+                        src={community.avatar}
+                        alt={community.name}
+                      />
+                      <AvatarFallback>
+                        {community.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span>
+                      {index + 1}. {community.name}
+                    </span>
+                  </div>
+                  <Button
+                    variant="secondary"
+                    className="bg-purple-500 text-white hover:bg-purple-600"
+                  >
+                    Subscribe
+                  </Button>
+                </div>
+              ))}
+              <Button className="w-full mt-4 bg-purple-600 text-white hover:bg-purple-700">
+                View All
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="mt-4">
+            <CardHeader className="bg-white">
+              <div className="flex items-center p-2">
+                <Avatar className="mr-2">
+                  <AvatarImage src="path/to/home-avatar.png" alt="Home" />
+                  <AvatarFallback>H</AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle>Home</CardTitle>
+                  <span className="text-gray-500">
+                    Home page personalized based on your subscribed communities.
+                  </span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="bg-white p-4">
+              <Button className="w-full mb-2 bg-purple-600 text-white hover:bg-purple-700">
+                Create Post
+              </Button>
+              <Button className="w-full bg-purple-600 text-white hover:bg-purple-700">
+                Create Community
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      {/* Sidebar content */}
+      <div className="min-h-screen bg-gray-100 p-4 flex justify-center">
+        <div className="w-full max-w-md">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-white bg-purple-600 p-2 rounded-t-md">
+                Top Communities
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="bg-white p-4">
+              {communities.map((community, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center my-2"
+                >
+                  <div className="flex items-center">
+                    <Avatar className="mr-2">
+                      <AvatarImage
+                        src={community.avatar}
+                        alt={community.name}
+                      />
+                      <AvatarFallback>
+                        {community.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span>
+                      {index + 1}. {community.name}
+                    </span>
+                  </div>
+                  <Button
+                    variant="secondary"
+                    className="bg-purple-500 text-white hover:bg-purple-600"
+                  >
+                    Subscribe
+                  </Button>
+                </div>
+              ))}
+              <Button className="w-full mt-4 bg-purple-600 text-white hover:bg-purple-700">
+                View All
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="mt-4">
+            <CardHeader className="bg-white">
+              <div className="flex items-center p-2">
+                <Avatar className="mr-2">
+                  <AvatarImage src="path/to/home-avatar.png" alt="Home" />
+                  <AvatarFallback>H</AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle>Home</CardTitle>
+                  <span className="text-gray-500">
+                    Home page personalized based on your subscribed communities.
+                  </span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="bg-white p-4">
+              <Button className="w-full mb-2 bg-purple-600 text-white hover:bg-purple-700">
+                Create Post
+              </Button>
+              <Button className="w-full bg-purple-600 text-white hover:bg-purple-700">
+                Create Community
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      {/* Footer content */}
       <footer className="py-4 bg-white">
         <div className="container mx-auto text-center text-[#5f3a9e] text-sm">
           © 2024 Gantries by eSamudaay. All rights reserved.
