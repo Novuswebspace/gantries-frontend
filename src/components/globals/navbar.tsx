@@ -2,15 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { User2 } from "lucide-react";
 import { useAppSelector } from "@/store";
+import { QuickActions } from "@/components/explore/quick-actions";
+import ProfileActions from "@/components/globals/profile-actions";
+import Sidebar from "./sidebar";
 
 const Navbar = () => {
   const { data } = useAppSelector((state) => state.auth);
   return (
-    <header className="p-4 bg-white shadow-sm">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="sticky top-0 z-[50] w-full p-4 bg-white shadow-lg">
+      <div className="max-w-screen-2xl mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
+          <Sidebar />
           <Link
             href="https://esamudaay.com"
             target="_blank"
@@ -25,12 +28,11 @@ const Navbar = () => {
               className="hover:opacity-80 transition duration-300"
             />
           </Link>
+          <QuickActions />
         </div>
         <div className="flex items-center space-x-4">
           {data ? (
-            <Link href="/">
-              <User2 className="rounded-full" size={"1.3rem"} />
-            </Link>
+            <ProfileActions />
           ) : (
             <>
               <Link
@@ -49,7 +51,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 

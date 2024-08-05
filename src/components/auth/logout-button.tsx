@@ -40,8 +40,8 @@ const LogoutButton = ({
         <Spinner />
       ) : (
         children ?? (
-          <div className="flex items-center gap-1">
-            <LogOut />
+          <div className="flex items-center gap-3">
+            <LogOut size={"1.1rem"} />
             Logout
           </div>
         )

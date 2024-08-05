@@ -8,9 +8,11 @@ const Navbar = dynamic(() => import("@/components/globals/navbar"), {
 
 const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="min-h-screen flex flex-col bg-purple-50">
+    <main className="min-h-screen bg-gray-100/50">
       <Navbar />
-      {children}
+      <div className="flex-grow max-w-screen-xl mx-auto w-full">
+        {children}
+      </div>
       <Footer />
     </main>
   );

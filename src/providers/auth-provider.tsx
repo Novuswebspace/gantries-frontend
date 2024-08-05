@@ -15,7 +15,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.replace(ROUTES.HOME);
+      // router.replace(ROUTES.HOME);
     } else {
       const getMeUser = async () => {
         const { error } = await fetch<User>("/auth/me");
@@ -23,7 +23,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           router.replace(ROUTES.SIGNIN);
         }
       };
-      getMeUser();
+      // getMeUser();
     }
   }, [fetch, isAuthenticated, router]);
 
