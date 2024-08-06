@@ -12,6 +12,10 @@ import SidecardWrapper from "@/components/explore/sidecard-wrapper";
 import AvatarLogo from "@/components/globals/avatar-logo";
 import PostCard from "@/components/explore/post-card";
 import TagBadge from "@/components/explore/tag-badge";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ROUTES } from "@/routes";
+import { Badge } from "@/components/ui/badge";
 
 type CommunityPageProps = {
   params: { communityName: string };
@@ -79,6 +83,11 @@ const CommunityPage = async ({ params }: CommunityPageProps) => {
               .map((community) => (
                 <CommunityCard key={community._id} community={community} />
               ))}
+            <div className="w-full flex justify-center">
+              <Badge variant={"outline"}>
+                <Link href={ROUTES.COMMUNITIES}>View More</Link>
+              </Badge>
+            </div>
           </SidecardWrapper>
           <SidecardWrapper
             title="Top Topics"

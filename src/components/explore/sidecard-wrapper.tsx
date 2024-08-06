@@ -28,7 +28,7 @@ const SidecardWrapper = ({
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn(className)}>{children}</CardContent>
+      <CardContent className={cn("px-3 py-2" , className)}>{children}</CardContent>
     </Card>
   );
 };
