@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useAppSelector } from "@/store";
 import { QuickActions } from "@/components/explore/quick-actions";
 import ProfileActions from "@/components/globals/profile-actions";
-import Sidebar from "./sidebar";
 
 const Navbar = () => {
   const { data } = useAppSelector((state) => state.auth);
@@ -13,7 +12,6 @@ const Navbar = () => {
     <nav className="sticky top-0 z-[50] w-full p-4 bg-white shadow-lg">
       <div className="max-w-screen-2xl mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <Sidebar />
           <Link
             href="https://esamudaay.com"
             target="_blank"

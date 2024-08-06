@@ -10,15 +10,16 @@ type AvatarLogoProps = {
 
 const AvatarLogo = ({ src, alt, fallback, className }: AvatarLogoProps) => {
   return (
-    <Avatar className="flex items-center justify-center">
+    <Avatar className={cn("w-6 h-6 rounded-full object-cover", className)}>
       <AvatarImage
         src={src}
         alt={alt || "alt"}
-        className={cn("w-6 h-6 rounded-full object-cover", className)}
+        className={"w-full h-full rounded-full object-cover"}
+        loading="lazy"
       />
       <AvatarFallback
         asChild={typeof fallback !== "string"}
-        className="h-7 w-7 bg-primary text-white rounded-full border border-gray-400"
+        className="w-full h-full rounded-full border border-gray-400"
       >
         {fallback}
       </AvatarFallback>

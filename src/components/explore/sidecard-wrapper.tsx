@@ -15,7 +15,7 @@ const SidecardWrapper = ({
   className,
 }: SidecardWrapperProps) => {
   return (
-    <Card className="sticky top-[5.5rem] rounded-xl shadow-md border border-gray-300">
+    <Card className="rounded-xl shadow-md border border-gray-300">
       <CardHeader className="relative w-full h-[7ch] p-0">
         <Image
           src="/images/network.jpg"

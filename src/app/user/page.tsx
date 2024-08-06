@@ -72,7 +72,7 @@ export default function StudentDetailsPage() {
           layout="fill"
           objectFit="cover"
         />
-        <div className="absolute inset-0 bg-[#5f3a9e] bg-opacity-10 flex flex-col justify-center items-center p-12 text-white">
+        <div className="absolute inset-0 bg-[#5f3a9e] bg-opacity-10 flex flex-col justify-center items-center p-12 text-white tracking-in-expand">
           <h1 className="text-4xl font-bold mb-6">Welcome</h1>
           <p className="text-xl text-center mb-8">
             Please provide your details to join Gantries by eSamudaay.

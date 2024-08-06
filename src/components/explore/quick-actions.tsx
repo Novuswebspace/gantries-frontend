@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ChevronDown, Home, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,17 +14,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CreateCommunityModal from "@/components/explore/create-community-modal";
+import Link from "next/link";
+import { ROUTES } from "@/routes";
 
 export function QuickActions() {
   const pathname = usePathname();
+
+  const [open, setOpen] = useState(false);
+
   const { label, Icon } = useMemo(() => {
     if (pathname.includes("explore")) {
       return { label: "Explore", Icon: Sparkles };
     }
+    if (pathname.includes("community")) {
+      return { label: "Community", Icon: Users };
+    }
     return { label: "Home", Icon: Home };
   }, [pathname]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
@@ -41,20 +54,28 @@ export function QuickActions() {
           <DropdownMenuItem asChild>
             <CreateCommunityModal />
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <button className="flex items-center gap-3">
+          <DropdownMenuItem>
+            <Link href={ROUTES.COMMUNITIES} className="flex items-center gap-2">
               <Users size={"1.1rem"} /> All Communities
-            </button>
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
 
-        {/* Subscribed Communities */}
-        <DropdownMenuLabel>Subscribed</DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuItem>Team 1</DropdownMenuItem>
-          <DropdownMenuItem>Team 2</DropdownMenuItem>
+        {/* Quick Links */}
+        <DropdownMenuLabel>Quick Links</DropdownMenuLabel>
+        <DropdownMenuGroup className="space-y-1.5">
+          <DropdownMenuItem>
+            <Link href={ROUTES.HOME} className="flex items-center gap-2">
+              <Home size={"1.1rem"} /> Home
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href={ROUTES.EXPLORE} className="flex items-center gap-2">
+              <Sparkles size={"1.1rem"} /> Explore
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

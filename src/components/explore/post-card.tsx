@@ -23,7 +23,7 @@ type PostCardProps = {
 
 const PostCard = () => {
   return (
-    <Card className="p-4 flex gap-2.5 md:gap-5 border border-gray-300 shadow-lg rounded-xl">
+    <Card className="p-4 flex gap-2.5 md:gap-8 border border-gray-300 shadow-lg rounded-xl">
       <div className="flex flex-col gap-5 items-center">
         <div className="flex flex-col gap-5 items-center">
           <div className="flex flex-col gap-3 items-center">
@@ -62,23 +62,31 @@ const PostCard = () => {
           </div>
         </div>
         {/* Content */}
-        <CardContent className="space-y-3 p-0">
-          <Link href="/" className="hover:underline">
-            <CardTitle>This is new Post</CardTitle>
-          </Link>
-          <CardDescription className="text-black text-justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta ipsam
-            nobis at similique iure. Quaerat quod, at iste amet hic nulla
-            assumenda blanditiis incidunt qui.
-          </CardDescription>
+        <CardContent className="space-y-4 p-0">
           <div className="h-[30ch]">
             <Image
               src="/images/nature.jpg"
               alt="image"
               height={400}
               width={400}
-              className="w-full h-full rounded-xl max-w-2xl mx-auto"
+              className="w-full h-full rounded-xl max-w-xl"
             />
+          </div>
+          <div className="space-y-3">
+            <Link href="/" className="hover:underline">
+              <CardTitle>This is new Post</CardTitle>
+            </Link>
+            <CardDescription className="text-black text-justify max-w-2xl">
+              <span>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta
+                ipsam nobis at similique iure. Quaerat quod, at iste amet hic
+                nulla assumenda blanditiis incidunt qui....&nbsp;
+              </span>
+
+              <Link href="/" className="hover:underline text-primary">
+                Read more
+              </Link>
+            </CardDescription>
           </div>
         </CardContent>
         {/* <CardFooter className="mt-4 w-full flex justify-start gap-6">

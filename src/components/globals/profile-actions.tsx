@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import AvatarLogo from "@/components/globals/avatar-logo";
-import LogoutButton from "@/components/auth/logout-button";
+import LogoutModal from "@/components/auth/logout-modal";
 
 const ProfileActions = () => {
   return (
@@ -36,19 +36,17 @@ const ProfileActions = () => {
         align="end"
       >
         <DropdownMenuGroup className="space-y-1.5">
-          <Link href="/user">
-            <DropdownMenuItem asChild>
-              <button className="flex items-center gap-3">
-                <User size={"1.1rem"} /> Profile
-              </button>
-            </DropdownMenuItem>
-          </Link>
+          <DropdownMenuItem>
+            <Link href="/user" className="flex items-center gap-3">
+              <User size={"1.1rem"} /> Profile
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator className="border border-b-gray-200" />
 
-        <DropdownMenuItem>
-          <LogoutButton />
+        <DropdownMenuItem asChild>
+          <LogoutModal />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
