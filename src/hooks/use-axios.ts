@@ -7,7 +7,9 @@ export const useAxios = () => {
   const [loading, setLoading] = useState(false);
 
   /**
+   * @description Utility to fetch data in client components (In server components, use 'fetchServer()' function instead)
    * @param endpoint string
+   * @param T Type of data expected Ex:fetch<"Data type expected from the response">(...)
    */
   const fetch = useCallback(async <T>(endpoint: string) => {
     let data: ApiResponse<T> | null = null;
@@ -29,6 +31,7 @@ export const useAxios = () => {
   }, []);
 
   /**
+   * @description Utility to mutate data
    * @param method  Type of request --> "put" | "post" | "delete"
    * @param body Request body
    * @param config Axios Config

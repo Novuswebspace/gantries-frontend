@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,6 +25,13 @@ import { Textarea } from "../ui/textarea";
 import { Plus } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAxios } from "@/hooks/use-axios";
+import { toast } from "sonner";
+import { usePathname, useRouter } from "next/navigation";
+import { ChangeEvent, useEffect, useState } from "react";
+import AvatarLogo from "../globals/avatar-logo";
+import { Community } from "@/types";
+import { ROUTES } from "@/routes";
 
 const CommunityFormSchema = z.object({
   name: z
@@ -33,6 +42,7 @@ const CommunityFormSchema = z.object({
     .string()
     .min(1, "Tell something about this community")
     .max(250, "Description cannot exceed more than 250 characters"),
+  picture: z.string().optional(),
   tags: z.array(z.string(), { message: "Select any tag" }),
 });
 
@@ -44,15 +54,62 @@ export default function CreateCommunityModal() {
     defaultValues: {
       name: "",
       description: "",
+      picture: "",
       tags: [],
     },
   });
 
-  const onSubmit = (values: CommunityFormSchema) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { mutate } = useAxios();
+
+  const [open, setOpen] = useState(false);
+  const [image, setImage] = useState("");
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files == null || files?.length === 0) {
+      form.setError("picture", { message: "Select an image" });
+      return;
+    }
+    const file = files[0];
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      const img = e.target?.result?.toString()!;
+      setImage(img);
+    };
+    fileReader.readAsDataURL(file);
+  };
+
+  const onSubmit = async (values: CommunityFormSchema) => {
+    if (!image) {
+      form.setError("picture", { message: "Select an image" });
+      return;
+    }
+    values = { ...values, picture: image };
     console.log(values);
+
+    const { error, data } = await mutate<Community>(
+      "post",
+      "/community",
+      values
+    );
+
+    if (error) {
+      toast.error(error);
+      return;
+    } else if (data) {
+      setOpen(false);
+      toast.success(data.message);
+      router.push(ROUTES.COMMUNITY(data.data.name));
+    }
   };
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="flex items-center gap-3 text-sm mx-2">
         <Plus size={"1.1rem"} /> Create Community
       </DialogTrigger>
@@ -64,6 +121,39 @@ export default function CreateCommunityModal() {
         </DialogHeader>
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="picture"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="image" className="text-primary">
+                    Community Picture
+                    <FormDescription className="text-xs">
+                      Upload Community Picture
+                    </FormDescription>
+                    <AvatarLogo
+                      src={image || "/images/placeholder.png"}
+                      alt="community logo"
+                      className="w-28 h-28 mx-auto cursor-pointer border border-gray-400"
+                    />
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="image"
+                      {...field}
+                      type="file"
+                      // accept="image/*"
+                      onChange={(e) => {
+                        handleImageChange(e);
+                        return field.onChange;
+                      }}
+                      className="hidden"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="name"
