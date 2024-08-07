@@ -73,7 +73,7 @@ const PostCard = () => {
             />
           </div>
           <div className="space-y-3">
-            <Link href="/" className="hover:underline">
+            <Link href="/community/communityName/post" className="hover:underline">
               <CardTitle>This is new Post</CardTitle>
             </Link>
             <CardDescription className="text-black text-justify max-w-2xl">
