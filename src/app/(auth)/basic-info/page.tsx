@@ -123,6 +123,8 @@ export default function BasicInfoPage() {
       dateOfBirth,
       aim: values.reasonForJoining,
     };
+    console.log(obj);
+    
     const { data, error } = await mutate<Student>(
       "post",
       "/user/basic-info",

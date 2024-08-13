@@ -53,7 +53,7 @@ export default function SignInPage() {
     if (error) {
       toast.error(error);
       if (error.includes("not verified")) {
-        return router.replace("/verify");
+        return router.replace(`/verify?phone=${values.phone}`);
       }
     } else if (data) {
       dispatch(authenticate(data.data));

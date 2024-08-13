@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import { ChevronDown, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,8 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import AvatarLogo from "@/components/globals/avatar-logo";
 import LogoutModal from "@/components/auth/logout-modal";
+import { useAppSelector } from "@/store";
 
 const ProfileActions = () => {
+  const {data} = useAppSelector(state => state.auth)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,7 +31,7 @@ const ProfileActions = () => {
             className="w-8 h-8"
             fallback={"harsha".charAt(0).toUpperCase()}
           />
-          <h3 className="font-semibold hidden md:block">Harsha</h3>
+          <h3 className="font-semibold hidden md:block">{data?.username}</h3>
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
