@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Spinner from "@/components/globals/spinner";
+import { ROUTES } from "@/routes";
 
 const VerifyOTPSchema = z.object({
   otp: z.string().length(6, {
@@ -52,7 +53,7 @@ const VerifyOTPPage = () => {
       toast.error(error);
     } else if (data) {
       toast.success(data.message);
-      router.replace("/");
+      router.replace(ROUTES.BASIC_INFO);
     }
   };
 

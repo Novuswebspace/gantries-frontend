@@ -19,9 +19,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,7 +43,6 @@ const CommunityFormSchema = z.object({
     .min(1, "Tell something about this community")
     .max(250, "Description cannot exceed more than 250 characters"),
   picture: z.string().optional(),
-  tags: z.array(z.string(), { message: "Select any tag" }),
 });
 
 type CommunityFormSchema = z.infer<typeof CommunityFormSchema>;
@@ -55,7 +54,6 @@ export default function CreateCommunityModal() {
       name: "",
       description: "",
       picture: "",
-      tags: [],
     },
   });
 
@@ -64,25 +62,29 @@ export default function CreateCommunityModal() {
   const { mutate } = useAxios();
 
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState("");
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    form.clearErrors();
     const files = e.target.files;
-    if (files == null || files?.length === 0) {
+    if (files == null || files.length === 0) {
       form.setError("picture", { message: "Select an image" });
       return;
     }
     const file = files[0];
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      const img = e.target?.result?.toString()!;
-      setImage(img);
-    };
-    fileReader.readAsDataURL(file);
+    if (file.size > 250 * 1024) {
+      // 300 KB
+      form.setError("picture", { message: "Image must be 250 KB or smaller" });
+      return;
+    }
+    setImage(file);
+    const imgString = URL.createObjectURL(file);
+    setPreviewImage(imgString);
   };
 
   const onSubmit = async (values: CommunityFormSchema) => {
@@ -90,24 +92,51 @@ export default function CreateCommunityModal() {
       form.setError("picture", { message: "Select an image" });
       return;
     }
-    values = { ...values, picture: image };
-    console.log(values);
 
-    const { error, data } = await mutate<Community>(
-      "post",
-      "/community",
-      values
-    );
+    if (image) {
+      // Append images
+      const formData = new FormData();
+      formData.append("file", image);
 
-    if (error) {
-      toast.error(error);
-      return;
-    } else if (data) {
-      setOpen(false);
-      toast.success(data.message);
-      router.push(ROUTES.COMMUNITY(data.data.name));
+      //upload the single image to cloud
+      const imgResponse = await mutate<string>(
+        "post",
+        "/upload/single",
+        formData,
+        {
+          loadingMsg: "Uploading picture....",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (imgResponse.error) {
+        toast.error(imgResponse.error);
+      } else if (imgResponse.data) {
+        toast.success(imgResponse.data.message);
+        //update the cloud url to the values
+        values = { ...values, picture: imgResponse.data.data };
+
+        //after uploading image update the remaining details
+        const { error, data } = await mutate<Community>(
+          "post",
+          "/community",
+          values
+        );
+
+        if (error) {
+          toast.error(error);
+          return;
+        } else if (data) {
+          setOpen(false);
+          toast.success(data.message);
+          router.push(ROUTES.COMMUNITY(data.data.name));
+        }
+      }
     }
   };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="flex items-center gap-3 text-sm mx-2">
@@ -132,7 +161,7 @@ export default function CreateCommunityModal() {
                       Upload Community Picture
                     </FormDescription>
                     <AvatarLogo
-                      src={image || "/images/placeholder.png"}
+                      src={previewImage || "/images/placeholder.png"}
                       alt="community logo"
                       className="w-28 h-28 mx-auto cursor-pointer border border-gray-400"
                     />
@@ -142,7 +171,7 @@ export default function CreateCommunityModal() {
                       id="image"
                       {...field}
                       type="file"
-                      // accept="image/*"
+                      accept="image/*"
                       onChange={(e) => {
                         handleImageChange(e);
                         return field.onChange;
