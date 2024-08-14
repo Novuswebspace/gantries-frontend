@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { useAxios } from "@/hooks/use-axios";
 import Spinner from "@/components/globals/spinner";
 import { User } from "@/types";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/store";
 import { authenticate } from "@/store/features/auth-slice";
 import { ROUTES } from "@/routes";
@@ -42,20 +42,23 @@ export default function SignInPage() {
   });
 
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const { loading, mutate } = useAxios();
+
+  const callbackUrl = searchParams.get("callback");
 
   const onSubmit = async (values: SignInSchema) => {
     const { data, error } = await mutate<User>("post", "/auth/login", values);
     if (error) {
       toast.error(error);
       if (error.includes("not verified")) {
-        return router.replace("/verify");
+        return router.replace(`/verify?phone=${values.phone}`);
       }
     } else if (data) {
       dispatch(authenticate(data.data));
       toast.success(data.message);
-      router.replace("/");
+      router.replace(callbackUrl ?? ROUTES.EXPLORE);
     }
   };
 
@@ -129,7 +132,10 @@ export default function SignInPage() {
           </Form>
           <p className="mt-6 text-center text-[#5f3a9e]">
             Don't have an account?{" "}
-            <Link href={ROUTES.SIGNUP} className="text-[#4b2f79] hover:underline">
+            <Link
+              href={ROUTES.SIGNUP}
+              className="text-[#4b2f79] hover:underline"
+            >
               Sign up
             </Link>
           </p>

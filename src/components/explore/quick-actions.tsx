@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, Home, Sparkles, Users } from "lucide-react";
+import { ROUTES } from "@/routes";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,9 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import CreateCommunityModal from "@/components/explore/create-community-modal";
-import Link from "next/link";
-import { ROUTES } from "@/routes";
+import CreateCommunityModal from "@/components/community/create-community-modal";
 
 export function QuickActions() {
   const pathname = usePathname();

@@ -1,14 +1,22 @@
 "use client";
 
 import Image from "next/image";
+import moment from "moment";
+import AsyncSelect from "react-select/async";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { z } from "zod";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import AsyncSelect from "react-select/async";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 
+import axios from "@/lib/axios";
+import { useAppSelector } from "@/store";
+import { ROUTES } from "@/routes";
+import { College, Student } from "@/types";
+import { useAxios } from "@/hooks/use-axios";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,12 +27,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAxios } from "@/hooks/use-axios";
-import Spinner from "@/components/globals/spinner";
-import { College } from "@/types";
-import axios from "@/lib/axios";
+import Spinner from "@/components/globals/spinner"
 
-const StudentDetailsSchema = z.object({
+const BasicInfoSchema = z.object({
   college: z
     .string()
     .min(3, { message: "College name must be at least 3 characters long" }),
@@ -40,24 +45,27 @@ const StudentDetailsSchema = z.object({
       message: "Reason must be more than one word",
     }),
   plan: z.string().min(1, { message: "Plan is required" }),
+  dateOfBirth: z.string().min(1, { message: "Date of birth is required" }),
 });
 
-type StudentDetailsSchema = z.infer<typeof StudentDetailsSchema>;
+type BasicInfoSchema = z.infer<typeof BasicInfoSchema>;
 
-export default function StudentDetailsPage() {
+export default function BasicInfoPage() {
   const router = useRouter();
-  const form = useForm<StudentDetailsSchema>({
-    resolver: zodResolver(StudentDetailsSchema),
+  const form = useForm<BasicInfoSchema>({
+    resolver: zodResolver(BasicInfoSchema),
     defaultValues: {
       college: "",
       course: "",
       yearOfEnding: "",
       reasonForJoining: "",
       plan: "",
+      dateOfBirth: "",
     },
   });
 
-  const { loading, mutate, fetch } = useAxios();
+  const { loading, mutate } = useAxios();
+  const { data: user } = useAppSelector((state) => state.auth);
   const [inputValue, setInputValue] = useState("");
 
   const fetchColleges = async (
@@ -103,19 +111,30 @@ export default function StudentDetailsPage() {
       ];
     }
   };
-  const onSubmit = async (values: StudentDetailsSchema) => {
-    console.log(values);
+  const onSubmit = async (values: BasicInfoSchema) => {
+    const dateOfBirth = moment(new Date(values.dateOfBirth)).format(
+      "DD-MM-YYYY"
+    );
+    console.log({ ...values, dateOfBirth });
 
-    const { data, error } = await mutate(
+    const obj = {
+      ...values,
+      user_id: user?._id,
+      dateOfBirth,
+      aim: values.reasonForJoining,
+    };
+    console.log(obj);
+    
+    const { data, error } = await mutate<Student>(
       "post",
-      "/api/student-details",
-      values
+      "/user/basic-info",
+      obj
     );
     if (error) {
       toast.error(error);
     } else if (data) {
-      toast.success("Details submitted successfully!");
-      router.push("/dashboard");
+      toast.success(data.message);
+      router.replace(ROUTES.EXPLORE);
     }
   };
 
@@ -204,6 +223,21 @@ export default function StudentDetailsPage() {
               />
               <FormField
                 control={form.control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel htmlFor="date" className="text-primary">
+                      Date of birth
+                    </FormLabel>
+                    <FormControl className="w-full">
+                      <Input id="date" type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="reasonForJoining"
                 render={({ field }) => (
                   <FormItem>
@@ -243,7 +277,7 @@ export default function StudentDetailsPage() {
                 disabled={loading}
                 className="w-full bg-[#5f3a9e] text-white hover:bg-[#4b2f79] transition duration-300"
               >
-                {loading ? <Spinner /> : "Register"}
+                {loading ? <Spinner /> : "Save"}
               </Button>
             </form>
           </Form>

@@ -7,6 +7,7 @@ export const ROUTES = {
   SIGNIN: "/sign-in",
   SIGNUP: "/sign-up",
   VERIFY: "/verify",
+  BASIC_INFO: "/basic-info",
 
   HOME: "/",
   EXPLORE: "/explore",
@@ -19,4 +20,15 @@ export const ROUTES = {
 
   /** @param tagName - Tag name */
   TAG: (tagName: string) => `/tag/${stringToSlug(tagName)}`,
+
+  /**
+   * @param  communityName - community name
+   * @param postId - post ID
+   */
+  POST_PAGE: (communityName: string, postId: string) =>
+    `/community/${stringToSlug(communityName)}/post/${postId}` as const,
+
+  /** @param communityName - community name */
+  CREATE_POST: (communityName: string) =>
+    `/community/${stringToSlug(communityName)}/post/create` as const,
 } as const;

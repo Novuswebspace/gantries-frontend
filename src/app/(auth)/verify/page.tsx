@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +26,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Spinner from "@/components/globals/spinner";
+import { ROUTES } from "@/routes";
+import { useAppDispatch } from "@/store";
+import { authenticate } from "@/store/features/auth-slice";
 
 const VerifyOTPSchema = z.object({
   otp: z.string().length(6, {
@@ -37,7 +40,9 @@ type VerifyOTPSchema = z.infer<typeof VerifyOTPSchema>;
 
 const VerifyOTPPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { loading, mutate } = useAxios();
+  const dispatch = useAppDispatch();
 
   const form = useForm<VerifyOTPSchema>({
     resolver: zodResolver(VerifyOTPSchema),
@@ -47,12 +52,23 @@ const VerifyOTPPage = () => {
   });
 
   const onSubmit = async (values: VerifyOTPSchema) => {
-    const { data, error } = await mutate("post", "/auth/verify", values);
+    const phone = searchParams.get("phone");
+    if (!phone) {
+      toast.error("Phone number is missing!");
+      return;
+    }
+    const { data, error } = await mutate("post", "/auth/verify", {
+      ...values,
+      phone,
+    });
     if (error) {
       toast.error(error);
     } else if (data) {
+      console.log(data);
+      
+      dispatch(authenticate(data.data));
       toast.success(data.message);
-      router.replace("/");
+      router.replace(ROUTES.BASIC_INFO);
     }
   };
 
