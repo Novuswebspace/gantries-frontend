@@ -5,8 +5,8 @@
  */
 export const stringToSlug = (str: string): string => {
   return str
-    .trim()
-    .replace(/[\s]+/g, "-") // Replace spaces with hyphens
+    ?.trim()
+    ?.replace(/[\s]+/g, "-") // Replace spaces with hyphens
     .replace(/^-+|-+$/g, ""); // Remove leading and trailing hyphens
 };
 

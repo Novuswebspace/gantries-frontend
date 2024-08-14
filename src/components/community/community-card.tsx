@@ -1,10 +1,15 @@
-import { Bell, Users } from "lucide-react";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
-import AvatarLogo from "../globals/avatar-logo";
 import Link from "next/link";
+import { Users } from "lucide-react";
 import { Community } from "@/types";
 import { ROUTES } from "@/routes";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
+import AvatarLogo from "@/components/globals/avatar-logo";
+import CommunitySubscribeButton from "@/components/community/community-subscribe-button";
 
 type CommunityCardProps = { showAbout?: boolean; community: Community };
 
@@ -31,13 +36,8 @@ const CommunityCard = ({ community, showAbout }: CommunityCardProps) => {
             <CardDescription>{community.description}</CardDescription>
           )}
         </div>
-        <Button
-          size={"sm"}
-          className="bg-gradient-primary flex items-center gap-1 rounded-full"
-        >
-          <span className="hidden lg:block">Subscribe</span>{" "}
-          <Bell size={"0.9rem"} />
-        </Button>
+        {/* Subscribe button */}
+        <CommunitySubscribeButton community={community} className="bg-gradient-primary" />
       </CardContent>
     </Card>
   );
