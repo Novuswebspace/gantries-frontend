@@ -1,6 +1,5 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { notFound } from "next/navigation";
 import { slugToString } from "@/util/slug";
 import { ROUTES } from "@/routes";
 import {

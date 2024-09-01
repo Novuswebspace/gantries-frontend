@@ -39,12 +39,15 @@ const PostCard = ({
   const [isLiked, setIsLiked] = useState(post.isLiked);
 
   const handleLikePost = async () => {
+    const prevValue = isLiked;
+    setIsLiked(!isLiked); //for optimistic update
     const { error, data } = await mutate<Post & { hasLiked: boolean }>(
       "post",
       `/post/${post._id}/like`
     );
     if (error) {
       toast.error(error);
+      setIsLiked(prevValue);
     } else if (data) {
       toast.success(data.message);
       setIsLiked(data.data.isLiked);
@@ -76,7 +79,16 @@ const PostCard = ({
             </Link>
           </div>
           <div className="flex gap-2 items-center capitalize">
-            <p>•&nbsp;By {post.createdBy?.username}&nbsp;•</p>
+            <p className="flex items-center gap-1">
+              •&nbsp;By
+              <Link
+                href={`/user/${post.createdBy._id}/profile`}
+                className="hover:underline"
+              >
+                {post.createdBy?.username}
+              </Link>
+              &nbsp;•
+            </p>
             <p className="text-gray-500">
               Posted {moment(post?.createdAt).fromNow()}
             </p>

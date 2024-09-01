@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { Fragment, ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector } from "@/store";
 import { useAxios } from "@/hooks/use-axios";
@@ -16,28 +16,23 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.replace(ROUTES.HOME);
+      // router.replace(ROUTES.HOME);
     } else {
       const getMeUser = async () => {
-        const { error } = await fetch<User>("/auth/me");
+        const { error, data } = await fetch<User>("/auth/me");
         if (error) {
           // localStorage.removeItem(STORAGE_KEY);
-          router.replace(
-            ROUTES.SIGNIN +
-              `?callback=${
-                !pathname.includes(
-                  ROUTES.SIGNIN ||
-                    ROUTES.VERIFY ||
-                    ROUTES.SIGNUP ||
-                    ROUTES.BASIC_INFO
-                )
-                  ? pathname
-                  : null
-              }`
+          const pulicRoutes = pathname.includes(
+            ROUTES.SIGNIN || ROUTES.VERIFY || ROUTES.SIGNUP || ROUTES.BASIC_INFO
           );
+          router.replace(
+            `${ROUTES.SIGNIN}${!pulicRoutes ? `?callback=${pathname}` : ""}`
+          );
+        } else if (data) {
+          router.replace(ROUTES.EXPLORE);
         }
       };
-      getMeUser();
+      // getMeUser();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

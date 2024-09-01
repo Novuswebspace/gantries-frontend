@@ -21,7 +21,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({
 
   const handleTagAddition = () => {
     const normalizedInput = inputValue.trim().toLowerCase();
-    const normalizedSelectedTags = selectedTags.map((tag) => tag.toLowerCase());
+    const normalizedSelectedTags = selectedTags?.map((tag) => tag.toLowerCase());
 
     if (normalizedInput && !normalizedSelectedTags.includes(normalizedInput)) {
       onTagAdd(inputValue.trim());
@@ -58,16 +58,16 @@ const TagSelector: React.FC<TagSelectorProps> = ({
       {inputValue && (
         <div className="bg-white shadow-md rounded-lg p-2">
           {existingTags
-            .filter((tag) =>
+            ?.filter((tag) =>
               tag.toLowerCase().includes(inputValue.toLowerCase())
             )
-            .filter(
+            ?.filter(
               (tag) =>
                 !selectedTags
-                  .map((t) => t.toLowerCase())
-                  .includes(tag.toLowerCase())
+                  ?.map((t) => t.toLowerCase())
+                  ?.includes(tag.toLowerCase())
             ) // Exclude already selected tags
-            .map((tag) => (
+            ?.map((tag) => (
               <div
                 role="button"
                 key={tag}
@@ -84,7 +84,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({
       )}
 
       <div className="flex flex-wrap mt-2">
-        {selectedTags.map((tag) => (
+        {selectedTags?.map((tag) => (
           <div
             key={tag}
             className="flex items-center bg-gray-200 rounded-full px-3 py-1 mr-2 mb-2"

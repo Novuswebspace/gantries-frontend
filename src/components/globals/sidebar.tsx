@@ -1,51 +1,46 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { HomeIcon, Sparkles, Users } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ROUTES } from "@/routes";
+import NavItem from "@/components/globals/nav-item";
 
-export default function Sidebar() {
+type SidebarProps = {
+  className?: string;
+};
+
+export default async function Sidebar({ className }: SidebarProps) {
+  const commonRoutes = [
+    {
+      label: "Home",
+      href: "/",
+      Icon: HomeIcon,
+    },
+    {
+      label: "Explore",
+      href: ROUTES.EXPLORE,
+      Icon: Sparkles,
+    },
+    {
+      label: "All Communities",
+      href: ROUTES.COMMUNITIES,
+      Icon: Users,
+    },
+  ];
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Menu role="button" />
-      </SheetTrigger>
-      <SheetContent side={"left"}>
-        <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+    <aside
+      className={cn(
+        "sticky top-16 h-screen flex flex-grow flex-col items-start gap-3 border-r border-r-gray-300 p-2 w-full lg:w-[20%]",
+        className
+      )}
+    >
+      {commonRoutes.map((route) => (
+        <NavItem
+          key={route.label}
+          label={route.label}
+          href={route.href}
+          Icon={route.Icon}
+        />
+      ))}
+      <div className="border-b border-b-gray-300 w-full" />
+    </aside>
   );
 }

@@ -1,7 +1,14 @@
 import { baseURL } from "@/lib/axios";
-import { Comment, Community, PaginationResponse, Post, Tag } from "@/types";
+import {
+  Comment,
+  Community,
+  PaginationResponse,
+  Post,
+  Student,
+  Tag,
+  User,
+} from "@/types";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 const COOKIE = "_jwt___";
 
@@ -62,3 +69,6 @@ export const getCommunityByName = async (communityName: string) =>
 /** Fetches community by community name */
 export const getPostByID = async (postId: string) =>
   await fetchServer<Post>(`/post/${postId}`);
+
+export const getUserByID = async (userId: string) =>
+  await fetchServer<User & {student : Student}>(`/user/${userId}`);

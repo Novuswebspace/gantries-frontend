@@ -214,13 +214,13 @@ export default function CreateCommunityModal() {
                 </FormItem>
               )}
             />
-            <DialogFooter className="mt-2">
+            <DialogFooter className="space-y-2">
               <DialogClose asChild>
-                <Button variant={"outline"} size={"sm"}>
+                <Button variant={"outline"} size={"sm"} className="my-2">
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" size={"sm"}>
+              <Button type="submit" size={"sm"} className="my-2">
                 Create Community
               </Button>
             </DialogFooter>

@@ -9,6 +9,7 @@ import { useAxios } from "@/hooks/use-axios";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/globals/spinner";
+import { useQueryClient } from "@tanstack/react-query";
 
 type CommunitySubscribeButtonProps = {
   community: Community;
@@ -25,6 +26,8 @@ const CommunitySubscribeButton = ({
 
   const [isSubscribed, setIsSubscribed] = useState(community.isSubscribed);
 
+  const queryClient = useQueryClient();
+
   const handleSubscribe = async () => {
     const { error, data } = await mutate(
       "post",
@@ -34,6 +37,9 @@ const CommunitySubscribeButton = ({
       toast.error(error);
       return;
     } else if (data) {
+      queryClient.invalidateQueries({
+        queryKey: ["community", community.name],
+      });
       toast.info(data.message);
       setIsSubscribed(!isSubscribed);
     }
@@ -52,7 +58,7 @@ const CommunitySubscribeButton = ({
         <Spinner />
       ) : (
         <>
-          <span>{isSubscribed ? "Unsubscribe" : "Subscribe"}</span>{" "}
+          <span className="lg:hidden">{isSubscribed ? "Unsubscribe" : "Subscribe"}</span>{" "}
           <Bell size={"1rem"} />
         </>
       )}

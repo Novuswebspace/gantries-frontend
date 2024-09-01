@@ -3,7 +3,7 @@
 import Image from "next/image";
 import moment from "moment";
 import AsyncSelect from "react-select/async";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -15,7 +15,7 @@ import { CalendarIcon } from "lucide-react";
 import axios from "@/lib/axios";
 import { useAppSelector } from "@/store";
 import { ROUTES } from "@/routes";
-import { College, Student } from "@/types";
+import { College, Student, Tag } from "@/types";
 import { useAxios } from "@/hooks/use-axios";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +27,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Spinner from "@/components/globals/spinner"
+import Spinner from "@/components/globals/spinner";
+import TagSelector from "@/components/post/tag-selector";
 
 const BasicInfoSchema = z.object({
   college: z
@@ -46,6 +47,7 @@ const BasicInfoSchema = z.object({
     }),
   plan: z.string().min(1, { message: "Plan is required" }),
   dateOfBirth: z.string().min(1, { message: "Date of birth is required" }),
+  interests: z.array(z.string()).nonempty("At least one interest is required"),
 });
 
 type BasicInfoSchema = z.infer<typeof BasicInfoSchema>;
@@ -61,12 +63,20 @@ export default function BasicInfoPage() {
       reasonForJoining: "",
       plan: "",
       dateOfBirth: "",
+      interests : []
     },
   });
 
-  const { loading, mutate } = useAxios();
+  const { loading, mutate, fetch } = useAxios();
   const { data: user } = useAppSelector((state) => state.auth);
   const [inputValue, setInputValue] = useState("");
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    fetch<Tag[]>("/tag")
+      .then((res) => setTags(res.data?.data || []))
+      .catch((err) => err);
+  }, [fetch]);
 
   const fetchColleges = async (
     inputValue: string,
@@ -124,7 +134,7 @@ export default function BasicInfoPage() {
       aim: values.reasonForJoining,
     };
     console.log(obj);
-    
+
     const { data, error } = await mutate<Student>(
       "post",
       "/user/basic-info",
@@ -193,7 +203,7 @@ export default function BasicInfoPage() {
                     <FormLabel className="text-[#5f3a9e]">Course</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Your Course Name"
+                        placeholder="BE in computer science"
                         {...field}
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
@@ -268,6 +278,24 @@ export default function BasicInfoPage() {
                         className="border-[#5f3a9e] focus:border-[#4b2f79]"
                       />
                     </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="interests"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[#5f3a9e]">Interests</FormLabel>
+                    <TagSelector
+                      existingTags={tags.map((tag) => tag.name)}
+                      selectedTags={field.value}
+                      onTagAdd={(tag) => field.onChange([...field.value, tag])}
+                      onTagRemove={(tag) =>
+                        field.onChange(field.value.filter((t) => t !== tag))
+                      }
+                    />
                     <FormMessage className="text-red-500" />
                   </FormItem>
                 )}

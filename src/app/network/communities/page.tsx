@@ -1,7 +1,13 @@
-"use client"
+"use client";
 
+import CommunitySubscribeButton from "@/components/community/community-subscribe-button";
+import { useAxios } from "@/hooks/use-axios";
+import axios from "@/lib/axios";
+import { getAllCommunities, getAllTags } from "@/service/api-service";
+import { ApiResponse, Tag } from "@/types";
 import Image from "next/image";
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 type Community = {
   _id: string;
@@ -19,56 +25,32 @@ type Community = {
   isSubscribed: boolean;
 };
 
-const categories = ["Technology", "Art", "Science", "Music"];
-
-const dummyCommunities: Community[] = [
-  {
-    _id: "1",
-    name: "Tech Enthusiasts",
-    description: "A community for people who love technology.",
-    picture: "/images/tech.jpg", // Replace with actual images or URLs
-    createdBy: {
-      _id: "u1",
-      username: "techguru",
-      email: "techguru@example.com",
-    },
-    subscribersCount: 1500,
-    membersCount: 300,
-    postsCount: 120,
-    isSubscribed: true,
-  },
-  {
-    _id: "2",
-    name: "Art & Design",
-    description: "Explore the world of art and design.",
-    picture: "/images/art.jpg",
-    createdBy: {
-      _id: "u2",
-      username: "artist",
-      email: "artist@example.com",
-    },
-    subscribersCount: 2300,
-    membersCount: 500,
-    postsCount: 80,
-    isSubscribed: false,
-  },
-  // Add more dummy communities here
-];
-
-// Example for featured communities
-const featuredCommunities = dummyCommunities.slice(0, 2); // Taking the first two as featured
-
 export default function CommunitiesPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedtag, setSelectedtag] = useState<Tag | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredCommunities, setFilteredCommunities] =
-    useState<Community[]>(dummyCommunities);
+  const [filteredCommunities, setFilteredCommunities] = useState<Community[]>(
+    []
+  );
+  const [communities, setCommunities] = useState<Community[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const { loading, fetch } = useAxios();
 
-  const handleCategoryFilter = (category: string) => {
-    setSelectedCategory(category);
+  useEffect(() => {
+    fetch<Community[]>("/community")
+      .then((res) => setCommunities(res.data?.data || []))
+      .catch((err) => err);
+    fetch<Tag[]>("/tag")
+      .then((res) => setTags(res.data?.data || []))
+      .catch((err) => err);
+  }, [fetch]);
 
-    const filtered = dummyCommunities.filter((community) =>
-      community.name.toLowerCase().includes(category.toLowerCase())
+  const featuredCommunities = communities.slice(0, 2);
+
+  const handletagFilter = (tag: Tag) => {
+    setSelectedtag(tag);
+
+    const filtered = filteredCommunities.filter((community) =>
+      community.name.toLowerCase().includes(tag.name.toLowerCase())
     );
     setFilteredCommunities(filtered);
   };
@@ -77,7 +59,7 @@ export default function CommunitiesPage() {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = dummyCommunities.filter((community) =>
+    const filtered = filteredCommunities.filter((community) =>
       community.name.toLowerCase().includes(query)
     );
     setFilteredCommunities(filtered);
@@ -91,9 +73,9 @@ export default function CommunitiesPage() {
 
       {/* Featured Communities */}
       <div className="mb-10">
-        <h2 className="text-3xl font-semibold text-center text-[#4b2f79] mb-6">
+        {/* <h2 className="text-3xl font-semibold text-center text-[#4b2f79] mb-6">
           Featured Communities
-        </h2>
+        </h2> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {featuredCommunities.map((community) => (
             <div
@@ -106,10 +88,10 @@ export default function CommunitiesPage() {
                   alt={community.name}
                   width={400}
                   height={250}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-64 object-contain"
                 />
               )}
-              <div className="p-6">
+              <div className="p-6 capitalize">
                 <h2 className="text-2xl font-semibold text-[#4b2f79]">
                   {community.name}
                 </h2>
@@ -120,24 +102,19 @@ export default function CommunitiesPage() {
                       {community.subscribersCount} Subscribers
                     </p>
                     <p className="text-sm text-gray-500">
-                      {community.membersCount} Members
-                    </p>
-                    <p className="text-sm text-gray-500">
                       {community.postsCount} Posts
                     </p>
                   </div>
-                  <button
-                    className={`px-4 py-2 rounded-lg font-medium transition ${
-                      community.isSubscribed
-                        ? "bg-[#4b2f79] text-white"
-                        : "bg-gray-200 text-[#4b2f79]"
-                    }`}
-                  >
-                    {community.isSubscribed ? "Subscribed" : "Subscribe"}
-                  </button>
+                  <CommunitySubscribeButton community={community} />
                 </div>
-                <p className="text-sm text-gray-400">
-                  Created by {community.createdBy.username}
+                <p className="text-sm text-gray-400 flex items-center gap-2">
+                  Created by
+                  <Link
+                    href={`/user/${community.createdBy._id}/profile`}
+                    className="underline capitalize"
+                  >
+                    {community.createdBy.username}
+                  </Link>
                 </p>
               </div>
             </div>
@@ -146,7 +123,7 @@ export default function CommunitiesPage() {
       </div>
 
       {/* Search Bar */}
-      <div className="flex justify-center mb-6">
+      {/* <div className="flex justify-center mb-6">
         <input
           type="text"
           placeholder="Search communities..."
@@ -154,26 +131,26 @@ export default function CommunitiesPage() {
           onChange={handleSearch}
           className="w-full max-w-lg p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4b2f79]"
         />
-      </div>
+      </div> */}
 
-      {/* Category Filters */}
-      <div className="flex justify-center space-x-4 mb-6">
-        {categories.map((category) => (
+      {/* tag Filters */}
+      {/* <div className="flex justify-center space-x-4 mb-6">
+        {tags.map((tag) => (
           <button
-            key={category}
-            onClick={() => handleCategoryFilter(category)}
+            key={tag._id}
+            onClick={() => handletagFilter(tag)}
             className={`px-4 py-2 rounded-lg font-medium transition ${
-              selectedCategory === category
+              selectedtag === tag
                 ? "bg-[#4b2f79] text-white"
                 : "bg-gray-200 text-[#4b2f79]"
             }`}
           >
-            {category}
+            {tag.name}
           </button>
         ))}
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredCommunities.map((community) => (
           <div
             key={community._id}
@@ -205,15 +182,7 @@ export default function CommunitiesPage() {
                     {community.postsCount} Posts
                   </p>
                 </div>
-                <button
-                  className={`px-4 py-2 rounded-lg font-medium transition ${
-                    community.isSubscribed
-                      ? "bg-[#4b2f79] text-white"
-                      : "bg-gray-200 text-[#4b2f79]"
-                  }`}
-                >
-                  {community.isSubscribed ? "Subscribed" : "Subscribe"}
-                </button>
+                <CommunitySubscribeButton community={community} />
               </div>
               <p className="text-sm text-gray-400">
                 Created by {community.createdBy.username}
@@ -221,7 +190,7 @@ export default function CommunitiesPage() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

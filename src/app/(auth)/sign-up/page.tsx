@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store";
 import { authenticate } from "@/store/features/auth-slice";
 import { ROUTES } from "@/routes";
+import { ArrowLeft } from "lucide-react";
 
 const SignUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -86,8 +87,13 @@ export default function SignUpPage() {
       </div>
       <div className="w-full md:w-1/2 overflow-y-scroll grid place-items-center">
         <div className="w-full max-w-md py-4">
-          <h2 className="text-3xl font-semibold text-center text-[#4b2f79] mb-6">
-            Create Your Account
+          <h2 className="relative text-center text-3xl font-semibold text-primary mb-6">
+            <Button size={'icon'} className="absolute left-0 bg-gray-100 hover:bg-gray-300 text-primary" onClick={() => router.push(ROUTES.HOME)} >
+              <ArrowLeft size={'1.1rem'} />
+            </Button>
+            <span>
+              Create New Account
+            </span>
           </h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

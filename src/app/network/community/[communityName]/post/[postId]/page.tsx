@@ -23,16 +23,16 @@ export default async function PostPage({ params }: PostPageProps) {
   const comments = await getAllCommentsByPostsId(post._id);
   return (
     <div className="flex gap-4 p-4 flex-wrap lg:flex-nowrap">
-      <div className="w-full lg:w-3/4">
+      <div className="w-full">
         {/* Use the PostCard component */}
         <PostCard readMore={false} maxContentLength={"full"} post={post} />
         <CommentSection postId={post._id as string} comments={comments || []} />
       </div>
-      <div className="w-full lg:w-1/4">
+      {/* <div className="w-full lg:w-1/4">
         <div className="w-full h-full bg-gray-200">
           <h1>Sidebar</h1>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

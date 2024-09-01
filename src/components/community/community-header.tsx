@@ -6,11 +6,11 @@ import AvatarLogo from "@/components/globals/avatar-logo";
 import CommunitySubscribeButton from "@/components/community/community-subscribe-button";
 
 /** A server component that renders community details */
-const CommunityHeader = async ({ community }: { community: Community }) => {
+const CommunityHeader = ({ community }: { community: Community }) => {
   return (
     <section>
-      <Card className="relative h-[20ch] bg-gradient-primary flex items-center px-6 text-white">
-        <div className="flex items-center gap-4 max-w-md">
+      <Card className="relative h-fit lg:h-[20ch] py-2 bg-gradient-primary flex items-center px-6 text-white">
+        <div className="flex flex-col lg:flex-row items-center gap-4 max-w-md">
           <AvatarLogo
             src={community.picture || "/images/nature.jpg"}
             alt={community.name || "community logo"}
@@ -18,7 +18,7 @@ const CommunityHeader = async ({ community }: { community: Community }) => {
             fallback={<Users className="text-primary p-2" />}
           />
           <div className="space-y-2">
-            <CardTitle className="text-3xl font-bold capitalize">
+            <CardTitle className="text-3xl font-bold capitalize text-center lg:text-start">
               {community.name}
             </CardTitle>
             <div className="text-white text-sm capitalize space-y-2">

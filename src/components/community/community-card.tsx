@@ -22,22 +22,25 @@ const CommunityCard = ({ community, showAbout }: CommunityCardProps) => {
             href={ROUTES.COMMUNITY(community.name)}
             className="flex items-center gap-2"
           >
-            <AvatarLogo
-              src={community.picture}
-              alt={community.name || "Community Logo"}
-              className="w-8 h-8 border border-gray-200"
-              fallback={<Users className="p-1.5 bg-primary text-white" />}
-            />
-            <CardTitle className="text-base hover:underline capitalize">
-              {community.name}
-            </CardTitle>
+              <AvatarLogo
+                src={community.picture}
+                alt={community.name || "Community Logo"}
+                className="w-8 h-8 border border-gray-200"
+                fallback={<Users className="p-1.5 bg-primary text-white" />}
+              />
+              <CardTitle className="text-base hover:underline capitalize">
+                {community.name}
+              </CardTitle>
           </Link>
           {showAbout && (
             <CardDescription>{community.description}</CardDescription>
           )}
-        </div>
+          </div>
         {/* Subscribe button */}
-        <CommunitySubscribeButton community={community} className="bg-gradient-primary" />
+        <CommunitySubscribeButton
+          community={community}
+          className="bg-gradient-primary"
+        />
       </CardContent>
     </Card>
   );

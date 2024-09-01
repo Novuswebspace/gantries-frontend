@@ -24,6 +24,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAppDispatch } from "@/store";
 import { authenticate } from "@/store/features/auth-slice";
 import { ROUTES } from "@/routes";
+import { ArrowLeft } from "lucide-react";
 
 const SignInSchema = z.object({
   phone: z.string().length(10, "Invalid Phone Number"),
@@ -80,8 +81,13 @@ export default function SignInPage() {
       </div>
       <div className="w-full md:w-1/2 overflow-y-auto flex items-center justify-center p-8">
         <div className="max-w-md w-full">
-          <h2 className="text-3xl font-semibold text-center text-[#4b2f79] mb-6">
-            Sign In to Your Account
+          <h2 className="relative text-center text-3xl font-semibold text-primary mb-6">
+            <Button size={'icon'} className="absolute left-0 bg-gray-100 hover:bg-gray-300 text-primary" onClick={() => router.push(ROUTES.HOME)} >
+              <ArrowLeft size={'1.1rem'} />
+            </Button>
+            <span>
+              Sign In to Your Account
+            </span>
           </h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

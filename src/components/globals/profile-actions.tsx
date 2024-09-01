@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { ChevronDown, User } from "lucide-react";
@@ -16,14 +16,14 @@ import LogoutModal from "@/components/auth/logout-modal";
 import { useAppSelector } from "@/store";
 
 const ProfileActions = () => {
-  const {data} = useAppSelector(state => state.auth)
+  const { data } = useAppSelector((state) => state.auth);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           size={"sm"}
-          className="flex items-center gap-1 border border-transparent hover:border-gray-300 py-2"
+          className="bg-transparent hover:bg-transparent flex items-center gap-1 border border-transparent hover:border-gray-300 py-2"
         >
           <AvatarLogo
             src="/images/nature.jpg"
@@ -41,7 +41,10 @@ const ProfileActions = () => {
       >
         <DropdownMenuGroup className="space-y-1.5">
           <DropdownMenuItem>
-            <Link href="/user" className="flex items-center gap-3">
+            <Link
+              href={`/user/${data?._id}/profile`}
+              className="flex items-center gap-3"
+            >
               <User size={"1.1rem"} /> Profile
             </Link>
           </DropdownMenuItem>

@@ -16,9 +16,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CreateCommunityModal from "@/components/community/create-community-modal";
+import { useAppSelector } from "@/store";
 
 export function QuickActions() {
   const pathname = usePathname();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const [open, setOpen] = useState(false);
 
@@ -42,7 +44,7 @@ export function QuickActions() {
         <Button
           variant="outline"
           size={"sm"}
-          className="flex items-center gap-1 border border-transparent hover:border-gray-300"
+          className="bg-transparent hover:bg-transparent flex items-center gap-1 border border-transparent hover:border-gray-300"
         >
           <Icon size={"1.1rem"} />
           <span className="hidden md:block">{label}</span>
@@ -51,9 +53,11 @@ export function QuickActions() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mt-6" align="start">
         <DropdownMenuGroup className="space-y-3 pt-2">
-          <DropdownMenuItem asChild>
-            <CreateCommunityModal />
-          </DropdownMenuItem>
+          {isAuthenticated && (
+            <DropdownMenuItem asChild>
+              <CreateCommunityModal />
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem>
             <Link href={ROUTES.COMMUNITIES} className="flex items-center gap-2">
               <Users size={"1.1rem"} /> All Communities
