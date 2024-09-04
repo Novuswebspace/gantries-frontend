@@ -31,4 +31,6 @@ export const ROUTES = {
   /** @param communityName - community name */
   CREATE_POST: (communityName: string) =>
     `/network/community/${stringToSlug(communityName)}/post/create` as const,
+
+  USER_PROFILE : (userId : string) => `/network/user/${userId}/profile`
 } as const;

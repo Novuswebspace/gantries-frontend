@@ -82,7 +82,7 @@ const PostCard = ({
             <p className="flex items-center gap-1">
               •&nbsp;By
               <Link
-                href={`/user/${post.createdBy._id}/profile`}
+                href={ROUTES.USER_PROFILE(post.createdBy._id)}
                 className="hover:underline"
               >
                 {post.createdBy?.username}

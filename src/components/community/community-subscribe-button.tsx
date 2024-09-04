@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Bell } from "lucide-react";
+import { Bell, BellOff } from "lucide-react";
 import { Community } from "@/types";
 import { useAppSelector } from "@/store";
 import { useAxios } from "@/hooks/use-axios";
@@ -58,8 +58,10 @@ const CommunitySubscribeButton = ({
         <Spinner />
       ) : (
         <>
-          <span className="lg:hidden">{isSubscribed ? "Unsubscribe" : "Subscribe"}</span>{" "}
-          <Bell size={"1rem"} />
+          <span className="lg:hidden">
+            {isSubscribed ? "Unsubscribe" : "Subscribe"}
+          </span>{" "}
+          {isSubscribed ? <BellOff size={"1rem"} /> : <Bell size={"1rem"} />}
         </>
       )}
     </Button>
