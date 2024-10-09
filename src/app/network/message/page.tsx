@@ -129,7 +129,9 @@ export default function MessagingPage() {
           <div className="p-4 border-t">
             <div className="flex items-center space-x-2">
               <Button variant="ghost" size="icon">
-                <Image className="h-5 w-5" />
+                              {/* <Image
+                                  src=""
+                                  className="h-5 w-5" /> */}
               </Button>
               <Button variant="ghost" size="icon">
                 <Paperclip className="h-5 w-5" />
