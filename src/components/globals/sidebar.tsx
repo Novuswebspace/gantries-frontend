@@ -1,4 +1,12 @@
-import { HomeIcon, Sparkles, Users } from "lucide-react";
+import {
+  HomeIcon,
+  Sparkles,
+  Users,
+  MessageCircle,
+  GalleryVertical,
+  Copy,
+  Tag,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/routes";
 import NavItem from "@/components/globals/nav-item";
@@ -23,6 +31,31 @@ export default async function Sidebar({ className }: SidebarProps) {
       label: "All Communities",
       href: ROUTES.COMMUNITIES,
       Icon: Users,
+    },
+    {
+      label: "Message",
+      href: "/",
+      Icon: MessageCircle,
+    },
+    {
+      label: "Friends",
+      href: "/",
+      Icon: Users,
+    },
+    {
+      label: "Feed",
+      href: "/",
+      Icon: GalleryVertical,
+    },
+    {
+      label: "Stories",
+      href: "/",
+      Icon: Copy,
+    },
+    {
+      label: "Events",
+      href: "/",
+      Icon: Tag,
     },
   ];
   return (
