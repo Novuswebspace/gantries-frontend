@@ -39,8 +39,8 @@ export default async function Sidebar({ className }: SidebarProps) {
     },
     {
       label: "Friends",
-      href: "/",
-      Icon: Users,
+      href: ROUTES.FRIENDS,
+      Icon: Users
     },
     {
       label: "Feed",

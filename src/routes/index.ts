@@ -8,7 +8,7 @@ export const ROUTES = {
   SIGNUP: "/sign-up",
   VERIFY: "/verify",
   BASIC_INFO: "/basic-info",
-
+  FRIENDS: "/network/friends",
   HOME: "/network",
   EXPLORE: "/network/explore",
   COMMUNITIES: "/network/communities",
